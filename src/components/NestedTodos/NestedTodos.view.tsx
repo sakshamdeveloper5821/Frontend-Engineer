@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -9,9 +9,17 @@ import {
   Collapse,
 } from "@mui/material";
 import { Add, ExpandLess, ExpandMore, Delete } from "@mui/icons-material";
+import { todoType } from "../../pages/Todo/TodoList.page";
 
+interface nestedTodoListType {
+  todo: todoType;
+  handleDeleteTodo: (todoId: string, parentId: string | null) => void;
+  handleToggleTodo: (todoId: string) => void ;
+  handleAddTodo: (subTask: string,parentId: string | null ) => void; 
+   openTodo: string[]
+}
 
-const NestedTodoList = (props: any) => {
+const NestedTodoList = (props: nestedTodoListType) => {
     const {todo ,handleDeleteTodo ,handleToggleTodo ,handleAddTodo, openTodo} = props
     const [inputValue, setInputValue] = useState<string>("");
     const hasSubTodos = !!(todo.subTodos && todo.subTodos.length);
@@ -25,14 +33,14 @@ const NestedTodoList = (props: any) => {
             {isOpen ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
           <ListItemText primary={todo.text} />
-          <IconButton onClick={() => handleDeleteTodo(todo.id)}>
+          <IconButton onClick={() => handleDeleteTodo(todo.id , null)}>
             <Delete />
           </IconButton>
         </ListItem>
         {hasSubTodos && (
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              {todo.subTodos?.map((subTodo: any) => (
+              {todo.subTodos?.map((subTodo: todoType) => (
                 <div key={subTodo.id}>
                   <ListItem>
                     <ListItemText primary={subTodo.text} />
@@ -52,10 +60,10 @@ const NestedTodoList = (props: any) => {
             <TextField
               variant="outlined"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === "Enter") {
-                  handleAddTodo(todo.id,inputValue);
+                  handleAddTodo(inputValue,todo.id);
                 }
               }}
               fullWidth
@@ -64,7 +72,7 @@ const NestedTodoList = (props: any) => {
             <Button
               variant="contained"
               onClick={() => {
-                handleAddTodo(todo.id,inputValue)
+                handleAddTodo(inputValue,todo.id)
                 setInputValue("")
               }}
               startIcon={<Add />}

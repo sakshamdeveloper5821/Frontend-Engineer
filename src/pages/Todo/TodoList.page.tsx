@@ -17,16 +17,17 @@ import AuthWapper from "../../components/AuthWapper";
 
 
 
-interface Todo {
+export interface todoType {
   id: string;
   text: string;
-  subTodos?: Todo[];
+  subTodos?: todoType[];
 }
 
 const NestedTodoList: React.FC = () => {
-  const [state, dispatch] = useStore();
-  const [todos, setTodos] = useState<Todo[]>([
-    ...JSON.parse(localStorage.getItem(state?.user?.email) || "[]"),
+  const { state, dispatch } = useStore();
+  const key = state?.user?.email || "Default"
+  const [todos, setTodos] = useState<todoType[]>([
+    ...JSON.parse(localStorage.getItem(key) || "[]"),
   ]);
   const [inputValue, setInputValue] = useState<string>("");
   const [openTodo, setOpenTodo] = useState<string[]>([]);
@@ -38,9 +39,9 @@ const NestedTodoList: React.FC = () => {
 
 }, [todos, state?.user?.email]);
 
-  const handleAddTodo = (parentId: string | null = null, subTask?: string) => {
+  const handleAddTodo = (parentId: string | null = null) => {
     if (inputValue.trim() !== "") {
-      const newTodo: Todo = {
+      const newTodo: todoType = {
         id: uuidv4(),
         text: inputValue,
       };
@@ -94,11 +95,12 @@ const NestedTodoList: React.FC = () => {
   };
 
   const handleAddTodoSub = (
-    parentId: string | null = null,
-    subTask: string
+    subTask: string,
+    parentId: string | null = null
+    
   ) => {
     if (subTask.trim() !== "") {
-      const newTodo: Todo = {
+      const newTodo: todoType = {
         id: uuidv4(),
         text: subTask,
       };
@@ -121,65 +123,6 @@ const NestedTodoList: React.FC = () => {
       setInputValue(""); // Clear the input value after adding a todo
     }
   };
-  //   const renderTodo = (todo: Todo) => {
-  //     const hasSubTodos = !!(todo.subTodos && todo.subTodos.length);
-  //     const isOpen = openTodo.includes(todo.id);
-
-  //     return (
-  //       <div key={todo.id}>
-  //         <ListItem>
-  //           <IconButton onClick={() => handleToggleTodo(todo.id)}>
-  //             {isOpen ? <ExpandLess /> : <ExpandMore />}
-  //           </IconButton>
-  //           <ListItemText primary={todo.text} />
-  //           <IconButton onClick={() => handleDeleteTodo(todo.id)}>
-  //             <Delete />
-  //           </IconButton>
-  //         </ListItem>
-  //         {hasSubTodos && (
-  //           <Collapse in={isOpen} timeout="auto" unmountOnExit>
-  //             <List component="div" disablePadding>
-  //               {todo.subTodos?.map((subTodo) => (
-  //                 <div key={subTodo.id}>
-  //                   <ListItem>
-  //                     <ListItemText primary={subTodo.text} />
-  //                     <IconButton
-  //                       onClick={() => handleDeleteTodo(subTodo.id, todo.id)}
-  //                     >
-  //                       <Delete />
-  //                     </IconButton>
-  //                   </ListItem>
-  //                 </div>
-  //               ))}
-  //             </List>
-  //           </Collapse>
-  //         )}
-  //         {isOpen && (
-  //           <div style={{ paddingLeft: 16 }}>
-  //             <TextField
-  //               variant="outlined"
-  //               value={inputValue}
-  //               onChange={(e) => setInputValue(e.target.value)}
-  //               onKeyDown={(e) => {
-  //                 if (e.key === "Enter") {
-  //                   handleAddTodo(todo.id);
-  //                 }
-  //               }}
-  //               fullWidth
-  //               placeholder="Add sub-task"
-  //             />
-  //             <Button
-  //               variant="contained"
-  //               onClick={() => handleAddTodo(todo.id)}
-  //               startIcon={<Add />}
-  //             >
-  //               Add Sub Task
-  //             </Button>
-  //           </div>
-  //         )}
-  //       </div>
-  //     );
-  //   };
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
@@ -204,8 +147,8 @@ const NestedTodoList: React.FC = () => {
               label="Add Todo"
               variant="outlined"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === "Enter") {
                   handleAddTodo();
                 }

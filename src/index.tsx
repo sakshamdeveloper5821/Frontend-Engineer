@@ -4,16 +4,19 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Routes from "./Routes";
 import { RouterProvider } from "react-router-dom";
-import Provider from "./context"
+import AuthProvider from "./context";
+import { ToastContainer } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Provider>
+    <AuthProvider>
+      <ToastContainer/>
     <RouterProvider router={Routes} />
-    </Provider>
+    </AuthProvider>
   </React.StrictMode>
 );
 

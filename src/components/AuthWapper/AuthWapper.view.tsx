@@ -1,3 +1,4 @@
+import React from "react";
 import { useStore } from "../../context";
 import { useEffect, JSX } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +13,7 @@ function AuthWapper(props: wapperPropsType) {
   const store = useStore();
 
   useEffect(() => {
-    const { isLoggedIn } = store[0];
+    const { state: {isLoggedIn} } = store;
     if (!isLoggedIn) {
       navigate("/");
     }

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Avatar from "@mui/material/Avatar";
@@ -17,11 +18,22 @@ import { useNavigate } from "react-router-dom";
 import users from "../../__mock__/userMock.json";
 import { useStore } from "../../context";
 import jwtDecode from "jwt-decode";
-// import jwt from 'jsonwebtoken';
-// import { Buffer } from 'buffer';
+import { toast } from "react-toastify"
+
+interface loginType {
+  email: string,
+  password: string,
+  rememberMe?: boolean 
+}
+
+interface userTypes {
+  email: string,
+  password: string,
+  jwt?: string 
+}
 
 function SignIn() {
-  const dispatch = useStore()[1];
+  const { dispatch }= useStore();
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -34,21 +46,21 @@ function SignIn() {
       email: Yup.string().email("Invalid email address").required("Required"),
       password: Yup.string().required("Required"),
     }),
-    onSubmit: (values: any) => {
+    onSubmit: (values: loginType) => {
       const { email, password } = values;
       const userDetails = users.find(
-        (data: any) => data.email === email && data.password === password
+        (data: userTypes) => data.email === email && data.password === password
       );
 
       if (userDetails) {
-        const decoded : any= jwtDecode(userDetails?.jwt)
+        const decoded :  {email: string}= jwtDecode(userDetails?.jwt)
         dispatch({
           type: "LOGGIN",
-          payload: { email: decoded?.email ? decoded?.email : userDetails.email , token: userDetails?.jwt },
+          payload: { email: decoded?.email , token: userDetails?.jwt },
         });
         navigate("/todo-list");
       } else {
-        alert("Something Wrong With Password Or Email")
+        toast("Something Wrong With Password Or Email")
       }
     },
   });
@@ -88,7 +100,7 @@ function SignIn() {
               type="email"
               {...formik.getFieldProps("email")}
               error={formik.touched.email && formik.errors.email ? true : false}
-              helperText={formik.touched.email && formik.errors.email}
+              helperText={<>{formik.touched.email && formik.errors.email}</>}
             />
             <TextField
               margin="normal"
@@ -102,7 +114,7 @@ function SignIn() {
               error={
                 formik.touched.password && formik.errors.password ? true : false
               }
-              helperText={formik.touched.password && formik.errors.password}
+              helperText={<>{formik.touched.password && formik.errors.password}</>}
             />
             <FormControlLabel
               control={

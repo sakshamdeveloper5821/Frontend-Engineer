@@ -1,22 +1,29 @@
-import { createContext, JSX, useReducer, useContext } from "react";
+import React, { createContext, useReducer, useContext } from "react";
 
 interface providerTypes {
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
 }
 
-interface initialStateTypes {
-  user: null | string;
+interface stateType {
+  user: null | {
+    email: string
+  };
   isLoggedIn: boolean;
   token: string;
 }
 
-const initialState: initialStateTypes = {
+interface actionType {
+  type: string;
+  payload?: any;
+}
+
+const initialState: stateType = {
   user: null,
   isLoggedIn: false,
   token: "",
 };
 
-const authReducer = (state: initialStateTypes = initialState, action: any) => {
+const authReducer = (state: stateType = initialState, action: actionType) => {
   switch (action.type) {
     case "LOGGIN":
       return {
@@ -35,17 +42,28 @@ const authReducer = (state: initialStateTypes = initialState, action: any) => {
   }
 };
 
-const ContextProvider = createContext<any>(null);
+const ContextProvider = createContext<{
+  state: stateType;
+  dispatch: React.Dispatch<actionType>;
+} | null>(null);
 
-const Provider = (props: providerTypes) => {
+const AuthProvider = (props: providerTypes) => {
   const { children } = props;
+  const [state, dispatch] = useReducer(authReducer, initialState);
+
   return (
-    <ContextProvider.Provider value={useReducer(authReducer, initialState)}>
+    <ContextProvider.Provider value={{ state, dispatch }}>
       {children}
     </ContextProvider.Provider>
   );
 };
 
-export const useStore = () => useContext(ContextProvider);
+ export const useStore = () => {
+  const context = useContext(ContextProvider);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 
-export default Provider;
+export default AuthProvider;
