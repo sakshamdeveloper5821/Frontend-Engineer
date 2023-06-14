@@ -1,0 +1,27 @@
+[
+  {
+    "email": "john.doe@example.com",
+    "password": "Ua7rJ#zS",
+    "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIn0.Yv-4pBlm-14r6e-pSkPor77rCpnIdwmWyHaRiOLqzKo"
+  },
+  {
+    "email": "jane.smith@example.com",
+    "password": "Pb6@nY3Q",
+    "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImphbmUuc21pdGhAZXhhbXBsZS5jb20ifQ.MR7HyoYwjbdnteyh6BA8Lx9-z7zuFpOz6EuzJD1K9es"
+  },
+  {
+    "email": "alex.johnson@example.com",
+    "password": "Xz2!gK8V",
+    "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsZXguam9obnNvbkBleGFtcGxlLmNvbSJ9.9X3Qmpz7YPzLj18E1WKJ_AqoRqNDTOjynJTfScvHy8o"
+  },
+  {
+    "email": "sarah.wilson@example.com",
+    "password": "Lc4@vZ9S",
+    "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNhcmFoLndpbHNvbkBleGFtcGxlLmNvbSJ9.l3dIdwy-eoLBxUfk8HEzZY2Ix8lfuxWiEc5O3cFbxBk"
+  },
+  {
+    "email": "michael.brown@example.com",
+    "password": "Rt9#xH1K",
+    "jwt": "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1pY2hhZWwuYnJvd25AZXhhbXBsZS5jb20ifQ.3vxoyV6ykeZW1XSJLOeNlhYnuVbPSR5VzCX9VNY4paM"
+  }
+]
