@@ -22,7 +22,7 @@ const initialState: stateType = {
   isLoggedIn: false,
   token: "",
 };
-
+// REDUCER FOR USE REDUCER TAKES STATE AND ACTION AS ITS PARAMETERS
 const authReducer = (state: stateType = initialState, action: actionType) => {
   switch (action.type) {
     case "LOGGIN":
@@ -41,12 +41,12 @@ const authReducer = (state: stateType = initialState, action: actionType) => {
       return state;
   }
 };
-
+//CONTEXT FOR PROVIDING STATE TO NESTED COMPONENTS
 const ContextProvider = createContext<{
   state: stateType;
   dispatch: React.Dispatch<actionType>;
 } | null>(null);
-
+// AUTHPROVIDER COMPONENT FOR PROVIDING STATE TO CHILDREN TAKES CHILDREN AS ITS PROPS
 const AuthProvider = (props: providerTypes) => {
   const { children } = props;
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -57,11 +57,11 @@ const AuthProvider = (props: providerTypes) => {
     </ContextProvider.Provider>
   );
 };
-
+//useStore HOOK FOR GETTING STATE FROM CONTEXT
  export const useStore = () => {
   const context = useContext(ContextProvider);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useStore must be used within an AuthProvider");
   }
   return context;
 };

@@ -20,12 +20,14 @@ import { useStore } from "../../context";
 import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify"
 
+// Define the type for the login data
 interface loginType {
   email: string,
   password: string,
   rememberMe?: boolean 
 }
 
+// Define the type for the user data
 interface userTypes {
   email: string,
   password: string,
@@ -33,9 +35,11 @@ interface userTypes {
 }
 
 function SignIn() {
+  // Access the store dispatch function
   const { dispatch }= useStore();
   const navigate = useNavigate();
 
+  // Form validation and submission using Formik
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -52,12 +56,17 @@ function SignIn() {
         (data: userTypes) => data.email === email && data.password === password
       );
 
+      // Check if user details are valid
       if (userDetails) {
         const decoded :  {email: string}= jwtDecode(userDetails?.jwt)
+
+        // Dispatch action to log in the user and save the token in the store
         dispatch({
           type: "LOGGIN",
           payload: { email: decoded?.email , token: userDetails?.jwt },
         });
+
+        // Navigate to the todo-list page
         navigate("/todo-list");
       } else {
         toast("Something Wrong With Password Or Email")
@@ -89,12 +98,12 @@ function SignIn() {
             noValidate
             sx={{ mt: 1 }}
           >
+            {/* Email input field */}
             <TextField
               margin="normal"
               fullWidth
               id="email"
               label="Email Address"
-             // name="email"
               autoComplete="email"
               autoFocus
               type="email"
@@ -102,10 +111,10 @@ function SignIn() {
               error={formik.touched.email && formik.errors.email ? true : false}
               helperText={<>{formik.touched.email && formik.errors.email}</>}
             />
+            {/* Password input field */}
             <TextField
               margin="normal"
               fullWidth
-              //name="password"
               label="Password"
               type="password"
               id="password"
@@ -116,6 +125,7 @@ function SignIn() {
               }
               helperText={<>{formik.touched.password && formik.errors.password}</>}
             />
+            {/* Remember me checkbox */}
             <FormControlLabel
               control={
                 <Checkbox
@@ -125,6 +135,7 @@ function SignIn() {
               }
               label="Remember me"
             />
+            {/* Sign In button */}
             <Button
               type="submit"
               fullWidth
@@ -135,11 +146,13 @@ function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
+                {/* Forgot password link */}
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
+                {/* Sign Up link */}
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>

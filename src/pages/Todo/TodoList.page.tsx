@@ -15,8 +15,7 @@ import { default as TodoList } from "../../components/NestedTodos";
 import { useStore } from "../../context";
 import AuthWapper from "../../components/AuthWapper";
 
-
-
+// Define the type for a single todo item
 export interface todoType {
   id: string;
   text: string;
@@ -25,20 +24,25 @@ export interface todoType {
 
 const NestedTodoList: React.FC = () => {
   const { state, dispatch } = useStore();
-  const key = state?.user?.email || "Default"
+  const key = state?.user?.email || "Default";
+  
+  // Initialize the todos state using the user's stored data or an empty array
   const [todos, setTodos] = useState<todoType[]>([
     ...JSON.parse(localStorage.getItem(key) || "[]"),
   ]);
+  
   const [inputValue, setInputValue] = useState<string>("");
   const [openTodo, setOpenTodo] = useState<string[]>([]);
 
   useEffect(() => {
+    // Update the user's todo list in the local storage when todos change
     if (state?.user?.email) {
       localStorage.setItem(state?.user?.email, JSON.stringify(todos));
     }
+  }, [todos, state?.user?.email]);
 
-}, [todos, state?.user?.email]);
-
+  // Function for adding a new todo
+  // parentId is optional and indicates the parent todo if present
   const handleAddTodo = (parentId: string | null = null) => {
     if (inputValue.trim() !== "") {
       const newTodo: todoType = {
@@ -65,6 +69,7 @@ const NestedTodoList: React.FC = () => {
     }
   };
 
+  // Toggle the visibility of a todo's sub-todos
   const handleToggleTodo = (todoId: string) => {
     if (openTodo.includes(todoId)) {
       setOpenTodo(openTodo.filter((id) => id !== todoId));
@@ -73,6 +78,8 @@ const NestedTodoList: React.FC = () => {
     }
   };
 
+  // Delete a todo by ID
+  // parentId is optional and indicates the parent todo if present
   const handleDeleteTodo = (todoId: string, parentId: string | null = null) => {
     if (parentId) {
       const updatedTodos = todos.map((todo) => {
@@ -94,10 +101,11 @@ const NestedTodoList: React.FC = () => {
     }
   };
 
+  // Function for adding a sub-task to a todo
+  // parentId is optional and indicates the parent todo if present
   const handleAddTodoSub = (
     subTask: string,
     parentId: string | null = null
-    
   ) => {
     if (subTask.trim() !== "") {
       const newTodo: todoType = {
@@ -123,7 +131,7 @@ const NestedTodoList: React.FC = () => {
       setInputValue(""); // Clear the input value after adding a todo
     }
   };
-
+// For logging out user
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
   };
@@ -147,7 +155,9 @@ const NestedTodoList: React.FC = () => {
               label="Add Todo"
               variant="outlined"
               value={inputValue}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setInputValue(e.target.value)
+              }
               onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === "Enter") {
                   handleAddTodo();
@@ -166,6 +176,7 @@ const NestedTodoList: React.FC = () => {
               Add
             </Button>
             <List>
+              {/* Render the nested todo list */}
               {todos.map((todo) => (
                 <TodoList
                   todo={todo}
